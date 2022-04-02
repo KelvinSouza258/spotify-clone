@@ -1,3 +1,14 @@
 {
-  "extends": ["@remix-run/eslint-config", "@remix-run/eslint-config/node"]
+    "plugins": ["prettier", "sonarjs", "simple-import-sort"],
+    "extends": [
+        "@remix-run/eslint-config",
+        "@remix-run/eslint-config/node",
+        "prettier",
+        "plugin:sonarjs/recommended"
+    ],
+    "rules": {
+        "prettier/prettier": "error",
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error"
+    }
 }
