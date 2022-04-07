@@ -2,7 +2,21 @@ import { createCookieSessionStorage, redirect } from '@remix-run/node'
 
 export const authorize = async () => {
     const baseUrl = 'https://accounts.spotify.com/authorize?'
-    const scopes = ['user-read-private', 'user-read-email'].join(',')
+    const scopes = [
+        'streaming',
+        'user-read-private',
+        'user-read-email',
+        'user-follow-read',
+        'user-top-read',
+        'user-read-playback-state',
+        'user-modify-playback-state',
+        'user-read-currently-playing',
+        'user-read-recently-played',
+        'user-library-read',
+        'user-library-modify',
+        'playlist-read-private',
+        'playlist-read-collaborative',
+    ].join(',')
 
     const url =
         baseUrl +
@@ -64,7 +78,10 @@ export const storage = createCookieSessionStorage({
     },
 })
 
-export async function createUserSession(token: string, refresh_token: string) {
+export const createUserSession = async (
+    token: string,
+    refresh_token: string
+) => {
     let session = await storage.getSession()
     session.set('token', token)
     session.set('refresh_token', refresh_token)
@@ -86,7 +103,7 @@ export const getUserSession = async (request: Request) => {
     return session
 }
 
-export async function logout(request: Request) {
+export const logout = async (request: Request) => {
     let session = await getUserSession(request)
     return redirect(`/`, {
         headers: {
