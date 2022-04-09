@@ -3,6 +3,8 @@ node_modules
 /.cache
 /build
 /public/build
+/api
+
 .env
 
 /app/styles
