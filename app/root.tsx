@@ -11,7 +11,10 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
+    useLoaderData,
 } from '@remix-run/react'
+import { useCallback } from 'react'
+import { WebPlaybackSDK } from 'react-spotify-web-playback-sdk'
 
 import styles from './styles/app.css'
 import { storage } from './utils/session.server'
@@ -38,9 +41,11 @@ export const loader: LoaderFunction = async ({ request }) => {
         })
 
         if (res.status === 200) {
-            return null
+            return token
         } else if (res.status === 401) {
             return redirect(`/token/refresh?redirectTo=${path}`)
+        } else if (res.status === 403) {
+            throw new Error('Add user to Spotify App Dashboard')
         }
 
         throw new Error('Something went wrong')
@@ -56,17 +61,29 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function App() {
+    const token = useLoaderData<string>()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getOAuthTOken = useCallback((callback) => callback(token), [])
+
     return (
         <html lang="en">
             <head>
                 <Meta />
                 <Links />
             </head>
-            <body>
-                <Outlet />
-                <ScrollRestoration />
-                <Scripts />
-                <LiveReload />
+            <body className="bg-darkGray text-white">
+                <WebPlaybackSDK
+                    initialDeviceName="Spotify Web App"
+                    initialVolume={0.5}
+                    connectOnInitialized={true}
+                    getOAuthToken={getOAuthTOken}
+                >
+                    <Outlet />
+                    <ScrollRestoration />
+                    <Scripts />
+                    <LiveReload />
+                </WebPlaybackSDK>
             </body>
         </html>
     )

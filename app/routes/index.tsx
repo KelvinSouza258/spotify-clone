@@ -1,6 +1,7 @@
 import type { LoaderFunction } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
 
+import { SpotifyPlayer } from '~/components/SpotifyPlayer'
 import type { Playlists, User } from '~/types'
 import { getUserSession } from '~/utils/session.server'
 
@@ -8,6 +9,7 @@ const fetchUserData = async (token: string) => {
     const res = await fetch('https://api.spotify.com/v1/me', {
         headers: {
             Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
         },
     })
 
@@ -52,7 +54,7 @@ const Home = () => {
         <>
             <p>Playlists</p>
             <ul>
-                {data.playlists.items.map((playlist) => {
+                {data.playlists.items.map((playlist, index) => {
                     return (
                         <li key={playlist.id}>
                             <p>
@@ -63,6 +65,9 @@ const Home = () => {
                     )
                 })}
             </ul>
+            <div>
+                <SpotifyPlayer />
+            </div>
             <Outlet />
         </>
     )
