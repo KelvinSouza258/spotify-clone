@@ -1,4 +1,5 @@
-import { ActionFunction, LoaderFunction, redirect } from '@remix-run/node'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 import { Form, useCatch } from '@remix-run/react'
 
 import { authorize, storage } from '~/utils/session.server'
@@ -6,7 +7,7 @@ import { authorize, storage } from '~/utils/session.server'
 export const loader: LoaderFunction = async ({ request }) => {
     const session = await storage.getSession(request.headers.get('Cookie'))
 
-    if (session.get('token') && session.get('refresh_token')) {
+    if (session.get('access_token') && session.get('refresh_token')) {
         return redirect('/')
     }
 

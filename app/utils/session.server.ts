@@ -83,7 +83,7 @@ export const createUserSession = async (
     refresh_token: string
 ) => {
     let session = await storage.getSession()
-    session.set('token', token)
+    session.set('access_token', token)
     session.set('refresh_token', refresh_token)
 
     return redirect(`/`, {
@@ -96,7 +96,7 @@ export const createUserSession = async (
 export const getUserSession = async (request: Request) => {
     const session = await storage.getSession(request.headers.get('Cookie'))
 
-    if (!session.get('token') || !session.get('refresh_token')) {
+    if (!session.get('access_token') || !session.get('refresh_token')) {
         throw redirect('/login')
     }
 
