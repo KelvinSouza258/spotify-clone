@@ -48,13 +48,11 @@ export const loader: LoaderFunction = async ({
 }
 
 export default function App() {
-    const data = useLoaderData<LoaderData>()
-
-    if (data === null) throw new Error('No data')
+    const data = useLoaderData<LoaderData | null>()
 
     const getOAuthTOken = useCallback(
-        (callback) => callback(data.token),
-        [data.token]
+        (callback) => callback(data?.token),
+        [data?.token]
     )
 
     return (
@@ -71,7 +69,9 @@ export default function App() {
                         connectOnInitialized={true}
                         getOAuthToken={getOAuthTOken}
                     >
-                        <MainSideBar playlists={data.playlists} />
+                        {data ? (
+                            <MainSideBar playlists={data.playlists} />
+                        ) : null}
                         <Outlet />
                         <div className="col-span-2">
                             <SpotifyPlayer />
