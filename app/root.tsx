@@ -10,6 +10,7 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
+    useCatch,
     useLoaderData,
 } from '@remix-run/react'
 import { useCallback } from 'react'
@@ -84,4 +85,10 @@ export default function App() {
             </body>
         </html>
     )
+}
+
+export const CatchBoundary = () => {
+    const caught = useCatch()
+
+    if (caught.status === 401) fetch('/token/refresh')
 }

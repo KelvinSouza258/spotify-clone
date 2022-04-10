@@ -1,4 +1,8 @@
-import { useWebPlaybackSDKReady } from 'react-spotify-web-playback-sdk'
+import { useEffect } from 'react'
+import {
+    useErrorState,
+    useWebPlaybackSDKReady,
+} from 'react-spotify-web-playback-sdk'
 
 import LoadingSpinner from '../LoadingSpinner'
 import PlayerButtons from './Player.Controls'
@@ -7,6 +11,13 @@ import SongInfo from './Player.SongInfo'
 
 const SpotifyPlayer = () => {
     const ready = useWebPlaybackSDKReady()
+    const error = useErrorState()
+
+    useEffect(() => {
+        if (error?.type === 'authentication_error') {
+            throw new Response('Authentication error', { status: 401 })
+        }
+    }, [error])
 
     return (
         <>
