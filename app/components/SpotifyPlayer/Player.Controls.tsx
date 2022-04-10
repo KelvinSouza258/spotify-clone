@@ -3,7 +3,7 @@ import {
     useSpotifyPlayer,
 } from 'react-spotify-web-playback-sdk'
 
-import { formatMilliseconds } from './Player.Helpers'
+import { formatMilliseconds } from '~/utils/helpers'
 
 const PlayerButtons = () => {
     const player = useSpotifyPlayer()

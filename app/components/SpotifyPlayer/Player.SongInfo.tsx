@@ -1,7 +1,7 @@
 import { Link } from '@remix-run/react'
 import { usePlaybackState } from 'react-spotify-web-playback-sdk'
 
-import { getIDfromURI } from './Player.Helpers'
+import { getIDfromURI } from '~/utils/helpers'
 
 const SongInfo = () => {
     const playbackState = usePlaybackState()

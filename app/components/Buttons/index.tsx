@@ -6,7 +6,6 @@ const play = (uri: string, token: string, id?: string) => {
         method: 'PUT',
         body: JSON.stringify({ uris: [uri] }),
         headers: {
-            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
         },
     })

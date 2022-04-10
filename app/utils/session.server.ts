@@ -111,3 +111,36 @@ export const logout = async (request: Request) => {
         },
     })
 }
+
+export const VerifyToken = async (request: Request): Promise<string | null> => {
+    const session = await storage.getSession(request.headers.get('Cookie'))
+    const token = session.get('access_token')
+    const refreshToken = session.get('refresh_token')
+    const path = new URL(request.url).pathname
+
+    if (token && refreshToken) {
+        const res = await fetch('https://api.spotify.com/v1/me', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+
+        if (res.status === 200) {
+            return token
+        } else if (res.status === 401) {
+            throw redirect(`/token/refresh?redirectTo=${path}`)
+        } else if (res.status === 403) {
+            throw new Error('Add user to Spotify App Dashboard')
+        }
+
+        throw new Error('Something went wrong')
+    }
+
+    const unauthorizedPaths = ['/login', '/token/refresh', '/token/get']
+
+    if (unauthorizedPaths.includes(path)) {
+        return null
+    }
+
+    throw redirect('/login')
+}
