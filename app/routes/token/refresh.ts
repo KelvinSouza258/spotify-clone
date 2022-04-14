@@ -1,7 +1,6 @@
 import type { LoaderFunction } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
 
-import { getUserSession, storage } from '~/utils/session.server'
+import { getUserSession } from '~/utils/session'
 
 interface SpotifyResponse {
     access_token: string
@@ -10,14 +9,9 @@ interface SpotifyResponse {
     scope: string
 }
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request }) => {
     const session = await getUserSession(request)
     const refreshToken = session.get('refresh_token')
-    const redirectTo = params.redirectTo || '/'
-
-    if (!refreshToken) {
-        return redirect('/login')
-    }
 
     const baseUrl = 'https://accounts.spotify.com/api/token'
     const body = new URLSearchParams({
@@ -38,11 +32,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         body,
     })
 
+    if (res.status !== 200) {
+        return { token: null }
+    }
+
     const json: SpotifyResponse = await res.json()
 
     session.set('access_token', json.access_token)
 
-    return redirect(redirectTo, {
-        headers: { 'Set-Cookie': await storage.commitSession(session) },
-    })
+    return { token: json.access_token }
 }
