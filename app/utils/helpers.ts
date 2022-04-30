@@ -1,13 +1,15 @@
 export const getIDfromURI = (uri: string) =>
     uri.substring(uri.lastIndexOf(':') + 1)
 
-export const formatMilliseconds = (duration: number) => {
-    let seconds = Math.round((duration / 1000) % 60)
-    let minutes = Math.trunc(duration / 1000 / 60)
+// Milliseconds to hh:mm:ss
 
-    return (
-        String(minutes).padStart(2, '0') +
-        ':' +
-        String(seconds).padStart(2, '0')
-    )
+export const formatMilliseconds = (milliseconds: number) => {
+    const totalSeconds = milliseconds / 1000
+    const hours = Math.floor(totalSeconds / 3600)
+    const minutes = Math.floor((totalSeconds % 3600) / 60)
+    const seconds = Math.floor(totalSeconds % 60)
+
+    return `${hours > 0 ? String(hours).padStart(2, '0') + ':' : ''}${String(
+        minutes
+    ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
