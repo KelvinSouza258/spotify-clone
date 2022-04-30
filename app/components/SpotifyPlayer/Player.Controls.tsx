@@ -121,7 +121,7 @@ const PlayerButtons = () => {
                                             values: [trackPosition ?? 0],
                                             colors: [
                                                 `${
-                                                    isHovering
+                                                    isHovering || isDragging
                                                         ? '#1db954'
                                                         : '#ffffff'
                                                 }`,
@@ -142,7 +142,11 @@ const PlayerButtons = () => {
                                 {...props}
                                 style={{
                                     ...props.style,
-                                    display: `${isHovering ? 'block' : 'none'}`,
+                                    display: `${
+                                        isHovering || isDragging
+                                            ? 'block'
+                                            : 'none'
+                                    }`,
                                     height: '12px',
                                     width: '12px',
                                     backgroundColor: '#ffffff',

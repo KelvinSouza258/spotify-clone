@@ -7,6 +7,7 @@ const PlayerOptions = () => {
 
     const [volume, setVolume] = useState(0.5)
     const [isHovering, setIsHovering] = useState(false)
+    const [isDragging, setIsDragging] = useState(false)
     const [isMuted, setIsMuted] = useState(false)
     const [previousVolume, setPreviousVolume] = useState(volume)
 
@@ -32,7 +33,7 @@ const PlayerOptions = () => {
                 }}
             />
             <div
-                className="flex-grow h-4 group flex items-center gap-2"
+                className="flex-grow h-4 flex items-center gap-2"
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
             >
@@ -109,6 +110,11 @@ const PlayerOptions = () => {
                     values={[volume]}
                     step={0.05}
                     onChange={(values) => {
+                        setIsDragging(true)
+                        setVolume(values[0])
+                    }}
+                    onFinalChange={(values) => {
+                        setIsDragging(false)
                         setVolume(values[0])
                     }}
                     renderTrack={({ props, children }) => (
@@ -135,7 +141,7 @@ const PlayerOptions = () => {
                                         values: [volume],
                                         colors: [
                                             `${
-                                                isHovering
+                                                isHovering || isDragging
                                                     ? '#1db954'
                                                     : '#ffffff'
                                             }`,
@@ -156,10 +162,13 @@ const PlayerOptions = () => {
                             {...props}
                             style={{
                                 ...props.style,
-                                display: `${isHovering ? 'block' : 'none'}`,
+                                display: `${
+                                    isHovering || isDragging ? 'block' : 'none'
+                                }`,
                                 height: '12px',
                                 width: '12px',
                                 backgroundColor: '#ffffff',
+                                border: 'none',
                                 borderRadius: '50%',
                             }}
                         />
