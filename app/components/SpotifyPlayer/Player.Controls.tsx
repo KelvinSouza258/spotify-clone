@@ -25,7 +25,7 @@ const PlayerButtons = () => {
 
     return (
         <div className="flex flex-col col-span-1 gap-2 items-center">
-            <div className="flex items-center p-2 gap-4">
+            <div className="flex items-center gap-4">
                 <button
                     className="hover:text-white text-darkWhite transition-colors duration-200"
                     onClick={() => player?.previousTrack()}
@@ -41,26 +41,34 @@ const PlayerButtons = () => {
                     </svg>
                 </button>
                 <button
-                    className="bg-white w-8 h-8 flex items-center justify-center rounded-full"
+                    className="w-10 h-10 hover:scale-105 flex items-center justify-center rounded-full"
                     onClick={() => player?.togglePlay()}
                 >
                     {playbackState?.paused ? (
                         <svg
-                            role="img"
-                            height="16"
-                            width="16"
-                            viewBox="0 0 16 16"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-full w-full"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
                         >
-                            <path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path>
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                clip-rule="evenodd"
+                            />
                         </svg>
                     ) : (
                         <svg
-                            role="img"
-                            height="16"
-                            width="16"
-                            viewBox="0 0 16 16"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-full w-full"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
                         >
-                            <path d="M2.7 1a.7.7 0 00-.7.7v12.6a.7.7 0 00.7.7h2.6a.7.7 0 00.7-.7V1.7a.7.7 0 00-.7-.7H2.7zm8 0a.7.7 0 00-.7.7v12.6a.7.7 0 00.7.7h2.6a.7.7 0 00.7-.7V1.7a.7.7 0 00-.7-.7h-2.6z"></path>
+                            <path
+                                fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd"
+                            />
                         </svg>
                     )}
                 </button>

@@ -11,10 +11,17 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
-    useCatch,
+    useLoaderData,
 } from '@remix-run/react'
+import { useCallback } from 'react'
+import { WebPlaybackSDK } from 'react-spotify-web-playback-sdk'
 
+import MainSideBar from './components/MainSideBar'
+import { SpotifyPlayer } from './components/SpotifyPlayer'
 import styles from './styles/app.css'
+import type { Playlists } from './types'
+import { getValidToken } from './utils/session'
+import { fetchUserPlaylists } from './utils/spotify'
 
 export const meta: MetaFunction = () => ({
     charset: 'utf-8',
@@ -22,44 +29,80 @@ export const meta: MetaFunction = () => ({
     viewport: 'width=device-width,initial-scale=1',
 })
 
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
+export const links: LinksFunction = () => [
+    { rel: 'stylesheet', href: styles },
+    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+    {
+        rel: 'preconnect',
+        href: 'https://fonts.gstatic.com',
+        crossOrigin: 'anonymous',
+    },
+    {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Nunito:wght@800&family=Poppins:wght@400;700&display=swap',
+    },
+]
 
 export const loader: LoaderFunction = async ({ request }) => {
-    const baseUrl = new URL(request.url).origin
     const path = new URL(request.url).pathname
 
-    const res = await fetch(`${baseUrl}/token/get`, {
-        headers: request.headers,
-    })
-
-    const { token } = await res.json()
+    const token = await getValidToken(request)
 
     if (token === null && path !== '/login') {
         return redirect('/login')
     }
+    const playlists = await fetchUserPlaylists(token ?? '')
 
-    return new Response('', { headers: res.headers })
+    return { playlists, path }
+}
+
+interface LoaderData {
+    path: string
+    playlists: Playlists
 }
 
 export default function App() {
+    const { path, playlists }: LoaderData = useLoaderData()
+
+    const getOAuthTOken = useCallback(
+        (callback) =>
+            fetch('/token/get')
+                .then((res) => res.json())
+                .then(({ token }: { token: string }) => callback(token)),
+        []
+    )
+
     return (
         <html lang="en">
             <head>
                 <Meta />
                 <Links />
             </head>
-            <body>
-                <Outlet />
+            <body className="font-poppins">
+                {path !== '/login' ? (
+                    <div className="bg-darkGray text-white min-h-screen max-h-screen grid grid-rows-[1fr_auto] grid-cols-[250px_1fr]">
+                        <WebPlaybackSDK
+                            initialDeviceName="Spotify Web App"
+                            initialVolume={0.5}
+                            connectOnInitialized={true}
+                            getOAuthToken={getOAuthTOken}
+                        >
+                            {playlists ? (
+                                <MainSideBar playlists={playlists} />
+                            ) : null}
+                            <Outlet />
+                            <div className="col-span-2">
+                                <SpotifyPlayer />
+                            </div>
+                        </WebPlaybackSDK>
+                    </div>
+                ) : (
+                    <Outlet />
+                )}
                 <ScrollRestoration />
                 <Scripts />
                 <LiveReload />
             </body>
         </html>
     )
-}
-
-export const CatchBoundary = () => {
-    const caught = useCatch()
-
-    if (caught.status === 401) fetch('/token/refresh')
 }

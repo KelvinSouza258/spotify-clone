@@ -22,13 +22,13 @@ const SpotifyPlayer = () => {
     return (
         <>
             {ready ? (
-                <div className="grid grid-cols-3 items-center gap-2 bg-darkGray p-4">
+                <div className="grid grid-cols-3 items-center gap-2 bg-darkGray px-4 h-24 border border-solid border-[#282828]">
                     <SongInfo />
                     <PlayerButtons />
                     <PlayerOptions />
                 </div>
             ) : (
-                <div className="w-full h-20 bg-darkGray flex justify-center items-center">
+                <div className="w-full h-24 bg-darkGray flex justify-center items-center">
                     <LoadingSpinner />
                 </div>
             )}
