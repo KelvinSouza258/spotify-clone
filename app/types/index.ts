@@ -15,41 +15,95 @@ export interface User {
     uri: string
 }
 
-interface Playlist {
-    collaborative: boolean
-    description: string
+interface Image {
+    width: number
+    height: number
+    url: string
+}
+
+interface SpotifyItem {
     external_urls: {
         spotify: string
     }
     href: string
     id: string
-    images: [
-        {
-            height: number | null
-            url: string
-            width: number | null
-        }
-    ]
-    name: string
-    owner: {
-        display_name: string
-        external_urls: {
-            spotify: string
-        }
+    type: string
+    uri: string
+}
+
+interface Owner extends SpotifyItem {
+    display_name: string
+}
+
+interface Artist extends SpotifyItem {
+    followers: {
         href: string
-        id: string
-        type: string
-        uri: string
+        total: number
     }
+    genres: string[]
+    images: Image[]
+    name: string
+    popularity: number
+}
+
+interface Album extends SpotifyItem {
+    album_type: string
+    artists: SpotifyItem[]
+    available_markets: string[]
+    images: Image[]
+    name: string
+    release_date: string
+    release_date_precision: string
+    total_tracks: number
+}
+
+export interface Track extends SpotifyItem {
+    album: Album
+    artists: Artist[]
+    available_markets: string[]
+    disc_number: string
+    duration_ms: number
+    episode: boolean
+    explicit: boolean
+    external_ids: {
+        isrc: string
+    }
+    id: string
+    is_local: boolean
+    name: string
+    popularity: number
+    preview_url: string
+    track_number: number
+    linked_from: Track
+}
+
+export interface PlaylistItem {
+    added_at: string
+    added_by: SpotifyItem
+    is_local: boolean
+    primary_color: string | null
+    track: Track
+    video_thumbnail: { url: string | null }
+}
+
+export interface Playlist extends SpotifyItem {
+    collaborative: boolean
+    description: string
+    images: Image[]
+    name: string
+    owner: Owner
     primary_color: string | null
     public: boolean
     snapshot_id: string
     tracks: {
         href: string
+        items: PlaylistItem[]
+        limit: number
+        next: string | null
+        offset: number
+        previous: string | null
         total: number
     }
-    type: string
-    uri: string
 }
 
 export interface Playlists {
@@ -60,4 +114,16 @@ export interface Playlists {
     offset: number
     previous: string
     total: number
+}
+
+export interface RecentlyPlayed {
+    cursors: { after: string; before: string }
+    href: string
+    limit: number
+    next: string
+    items: {
+        track: Track
+        context: SpotifyItem
+        played_at: string
+    }[]
 }

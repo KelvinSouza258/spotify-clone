@@ -39,7 +39,7 @@ export const links: LinksFunction = () => [
     },
     {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Nunito:wght@800&family=Poppins:wght@400;700&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap',
     },
 ]
 
@@ -78,9 +78,9 @@ export default function App() {
                 <Meta />
                 <Links />
             </head>
-            <body className="font-poppins">
+            <body className="font-nunito">
                 {path !== '/login' ? (
-                    <div className="bg-darkGray text-white min-h-screen max-h-screen grid grid-rows-[1fr_auto] grid-cols-[250px_1fr]">
+                    <div className="bg-darkerGray text-white min-h-screen max-h-screen grid grid-rows-[1fr_auto] grid-cols-[250px_1fr]">
                         <WebPlaybackSDK
                             initialDeviceName="Spotify Web App"
                             initialVolume={0.5}

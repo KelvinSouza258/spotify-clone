@@ -1,8 +1,7 @@
 import { Link } from '@remix-run/react'
 
-import type { Playlists } from '~/types'
-
 import Logo from '~/assets/logo.svg'
+import type { Playlists } from '~/types'
 
 interface SideBarProps {
     playlists: Playlists
@@ -106,7 +105,7 @@ const MainSideBar = ({ playlists }: SideBarProps) => {
 
             <hr className="mx-4 mt-2 border-lightGray" />
 
-            <div className="py-2 pr-2 overflow-y-auto scrollbar  scrollbar-track-black scrollbar-thumb-lightGray">
+            <div className="py-2 pr-2 overflow-y-auto scrollbar scrollbar-track-black scrollbar-thumb-lightGray">
                 {playlists.items.map((playlist) => {
                     return (
                         <Link
