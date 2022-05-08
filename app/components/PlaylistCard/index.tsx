@@ -38,7 +38,7 @@ const PlaylistCard = ({ playlist, token }: ButtonProps) => {
             <div className="relative w-full h-full">
                 <img
                     className="rounded-md w-full h-full"
-                    src={playlist.images.at(0)?.url}
+                    src={playlist.images[0].url}
                     alt={playlist.name}
                 />
                 <button
