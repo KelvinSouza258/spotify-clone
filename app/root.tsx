@@ -12,6 +12,7 @@ import {
     Scripts,
     ScrollRestoration,
     useLoaderData,
+    useLocation,
 } from '@remix-run/react'
 import { useCallback } from 'react'
 import { WebPlaybackSDK } from 'react-spotify-web-playback-sdk'
@@ -53,16 +54,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     }
     const playlists = await fetchUserPlaylists(token ?? '')
 
-    return { playlists, path }
+    return { playlists }
 }
 
 interface LoaderData {
-    path: string
     playlists: Playlists
 }
 
 export default function App() {
-    const { path, playlists }: LoaderData = useLoaderData()
+    const { playlists } = useLoaderData<LoaderData>()
+    const { pathname } = useLocation()
 
     const getOAuthTOken = useCallback(
         (callback) =>
@@ -79,7 +80,7 @@ export default function App() {
                 <Links />
             </head>
             <body className="font-nunito">
-                {path !== '/login' ? (
+                {pathname !== '/login' ? (
                     <div className="bg-darkerGray text-white min-h-screen max-h-screen grid grid-rows-[1fr_auto] grid-cols-[250px_1fr]">
                         <WebPlaybackSDK
                             initialDeviceName="Spotify Web App"

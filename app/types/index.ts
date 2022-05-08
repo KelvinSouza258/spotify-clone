@@ -86,7 +86,7 @@ export interface PlaylistItem {
     video_thumbnail: { url: string | null }
 }
 
-export interface Playlist extends SpotifyItem {
+export interface PlaylistInfo extends SpotifyItem {
     collaborative: boolean
     description: string
     images: Image[]
@@ -97,18 +97,13 @@ export interface Playlist extends SpotifyItem {
     snapshot_id: string
     tracks: {
         href: string
-        items: PlaylistItem[]
-        limit: number
-        next: string | null
-        offset: number
-        previous: string | null
         total: number
     }
 }
 
 export interface Playlists {
     href: string
-    items: Playlist[]
+    items: PlaylistInfo[]
     limit: number
     next: string
     offset: number
@@ -116,14 +111,12 @@ export interface Playlists {
     total: number
 }
 
-export interface RecentlyPlayed {
-    cursors: { after: string; before: string }
+export interface Playlist {
     href: string
+    items: PlaylistItem[]
     limit: number
-    next: string
-    items: {
-        track: Track
-        context: SpotifyItem
-        played_at: string
-    }[]
+    next: string | null
+    offset: number
+    previous: string | null
+    total: number
 }

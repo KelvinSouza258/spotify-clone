@@ -17,7 +17,7 @@ interface ButtonProps {
     token: string
 }
 
-const PlayButton = ({ track, token }: ButtonProps) => {
+const TrackCard = ({ track, token }: ButtonProps) => {
     const device = usePlayerDevice()
 
     return (
@@ -55,4 +55,4 @@ const PlayButton = ({ track, token }: ButtonProps) => {
     )
 }
 
-export default PlayButton
+export default TrackCard

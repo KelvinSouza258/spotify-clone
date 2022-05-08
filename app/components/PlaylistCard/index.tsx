@@ -1,21 +1,24 @@
 import { usePlayerDevice } from 'react-spotify-web-playback-sdk'
 
-import type { Playlist } from '~/types'
+import type { Playlist, PlaylistInfo } from '~/types'
 
-const play = async (href: string, token: string, id?: string) => {
-    const res = await fetch(href, {
+const play = async (playlist: PlaylistInfo, token: string, id?: string) => {
+    console.log(playlist)
+    const res = await fetch(playlist.tracks.href, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     })
 
-    const playlist: Playlist = await res.json()
+    const playlistItems: Playlist = await res.json()
 
-    const uris = playlist.tracks.items.map((item) => item.track.uri)
+    console.log(playlistItems)
+
+    const uris = playlistItems.items.map((item) => item.track.uri)
 
     fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
         method: 'PUT',
-        body: JSON.stringify({ uris }),
+        body: JSON.stringify({ uris: [...uris] }),
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -23,32 +26,40 @@ const play = async (href: string, token: string, id?: string) => {
 }
 
 interface ButtonProps {
-    href: string
+    playlist: PlaylistInfo
     token: string
 }
 
-const PlayButton = ({ href, token }: ButtonProps) => {
+const PlaylistCard = ({ playlist, token }: ButtonProps) => {
     const device = usePlayerDevice()
 
     return (
-        <button
-            className="roundend-full bg-green grid place-items-center px-4 py-2 text-darkerGray"
-            onClick={() => play(href, token, device?.device_id)}
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-            >
-                <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                    clipRule="evenodd"
+        <div className="p-4 group flex flex-col gap-6 rounded-lg bg-darkGray hover:bg-hoverGray transition-colors duration-200">
+            <div className="relative w-full h-full">
+                <img
+                    className="rounded-md w-full h-full"
+                    src={playlist.images.at(0)?.url}
+                    alt={playlist.name}
                 />
-            </svg>
-        </button>
+                <button
+                    className="hover:scale-110 z-10 invisible absolute bottom-0 p-2 right-2 rounded-full bg-green opacity-0 text-darkerGray group-hover:visible group-hover:opacity-100 group-hover:bottom-2 transition-all duration-300 ease-in-out"
+                    onClick={() => play(playlist, token, device?.device_id)}
+                >
+                    <svg viewBox="0 0 24 24" className="w-6 h-6">
+                        <path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z" />
+                    </svg>
+                </button>
+            </div>
+            <div>
+                <p
+                    title={playlist.name}
+                    className="font-nunito font-extrabold text-white text-ellipsis whitespace-nowrap overflow-hidden"
+                >
+                    {playlist.name}
+                </p>
+            </div>
+        </div>
     )
 }
 
-export default PlayButton
+export default PlaylistCard

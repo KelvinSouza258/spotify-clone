@@ -12,10 +12,6 @@ const PlayerOptions = () => {
     const [previousVolume, setPreviousVolume] = useState(volume)
 
     useEffect(() => {
-        player?.getVolume().then(setVolume)
-    }, [player])
-
-    useEffect(() => {
         if (volume > 0) {
             setIsMuted(false)
         }
